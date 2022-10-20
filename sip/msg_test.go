@@ -15,8 +15,13 @@
 package sip_test
 
 import (
+	"bytes"
+	"fmt"
+	"io"
+	"os"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/jart/gosip/sip"
 )
@@ -66,7 +71,7 @@ var msgTests = []msgTest{
 
 	{
 		s: "",
-		e: sip.MsgIncompleteError{Msg: []uint8{}},
+		e: sip.MsgParseError{Code: sip.IncompleteHeader, Msg: []uint8{}, Offset: 0},
 	},
 
 	{
@@ -1230,7 +1235,7 @@ var msgTests = []msgTest{
 
 func TestParseMsg(t *testing.T) {
 	for _, test := range msgTests {
-		msg, err := sip.ParseMsg([]byte(test.s))
+		msg, _, err := sip.ParseMsg([]byte(test.s))
 		if err != nil {
 			if test.e == nil {
 				t.Errorf("%v", err)
@@ -1284,4 +1289,65 @@ func BenchmarkParseMsgTorture2(b *testing.B) { // 31397 ns/op
 	for i := 0; i < b.N; i++ {
 		sip.ParseMsg(msg)
 	}
+}
+
+func TestParseMsgFile(t *testing.T) { // 195200 op/  2334 ms
+	//获得一个file
+	home, _ := os.UserHomeDir()
+	f, err := os.Open(home + "/sip.txt")
+	if err != nil {
+		fmt.Println("read fail", err)
+		return
+	}
+
+	//把file读取到缓冲区中
+	defer f.Close()
+	var chunk []byte
+	buf := make([]byte, 2048)
+	count := 0
+	start := time.Now().UnixMilli()
+
+	for {
+		//从file读取到buf中
+		n, err := f.Read(buf)
+		if err != nil && err != io.EOF {
+			fmt.Println("read buf fail", err)
+			return
+		}
+		//说明读取结束
+		if n == 0 {
+			break
+		}
+		//读取到最终的缓冲区中
+		chunk = append(chunk, buf[:n]...)
+
+		for {
+			msg, pos, err := sip.ParseMsg(chunk)
+			if err != nil {
+				e := err.(sip.MsgParseError)
+				if e.Code != sip.ParseError {
+					break
+				}
+				fmt.Printf("%s", err.Error())
+
+				index := bytes.Index(chunk, []byte("\r\n"))
+				if index >= 0 {
+					chunk = chunk[index+2:]
+				}
+				continue
+			}
+
+			var b bytes.Buffer
+			msg.Append(&b)
+			if pos != b.Len() {
+				fmt.Printf("msg %d,append %d\n", pos, b.Len())
+			}
+
+			count++
+			chunk = chunk[pos:]
+		}
+	}
+
+	end := time.Now().UnixMilli()
+	fmt.Printf("parse %d message, total time %d ms\n", count, end-start)
 }

@@ -194,7 +194,7 @@ func ParseAddrBytes(s []byte) (addr *sip.Addr, err error) {
 	b.WriteString("SIP/2.0 900 ParseAddrBytes()\r\nContact:")
 	b.Write(s)
 	b.WriteString("\r\n\r\n")
-	msg, err := sip.ParseMsg(b.Bytes())
+	msg, _, err := sip.ParseMsg(b.Bytes())
 	if err != nil {
 		return nil, err
 	}

@@ -17,7 +17,6 @@ package sip
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 )
 
@@ -25,9 +24,9 @@ import (
 %% write data;
 
 // ParseURI turns a a SIP URI byte slice into a data structure.
-func ParseURI(data []byte) (uri *URI, err error) {
+func ParseURI(data []byte) (uri *URI, pos int, err error) {
 	if data == nil {
-		return nil, nil
+		return nil, 0, nil
 	}
 	uri = new(URI)
 	cs := 0
@@ -170,10 +169,16 @@ func ParseURI(data []byte) (uri *URI, err error) {
 
 	if cs < uri_first_final {
 		if p == pe {
-			return nil, errors.New(fmt.Sprintf("Incomplete URI: %s", data))
+			return nil, p, MsgParseError{
+			    Code: IncompleteHeader,
+			    Msg: []byte(fmt.Sprintf("Incomplete URI: %s", data)),
+			    Offset: p}
 		} else {
-			return nil, errors.New(fmt.Sprintf("Error in URI at pos %d: %s", p, data))
+			return nil, p, MsgParseError{
+			    Code: ParseError,
+			    Msg: []byte(fmt.Sprintf("Error at pos %d: %s", p, data)),
+			    Offset: p}
 		}
 	}
-	return uri, nil
+	return uri, p, nil
 }

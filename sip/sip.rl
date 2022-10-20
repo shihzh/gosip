@@ -122,8 +122,8 @@ action VersionMinor {
 }
 
 action RequestURI {
-	msg.Request, err = ParseURI(data[mark:p])
-	if err != nil { return nil, err }
+	msg.Request, _, err = ParseURI(data[mark:p])
+	if err != nil { return nil, p, err }
 }
 
 action StatusCode {
@@ -206,8 +206,8 @@ action AddrUnquotedDisplay {{
 }}
 
 action AddrUri {
-	addr.Uri, err = ParseURI(data[mark:p])
-	if err != nil { return nil, err }
+	addr.Uri, _, err = ParseURI(data[mark:p])
+	if err != nil { return nil, p, err }
 }
 
 action AddrParam {

@@ -15,7 +15,6 @@
 package sip_test
 
 import (
-	"errors"
 	"reflect"
 	"testing"
 
@@ -33,17 +32,17 @@ var uriTests = []uriTest{
 
 	{
 		s: "",
-		e: errors.New("Incomplete URI: "),
+		e: sip.MsgParseError{Code: 0, Msg: []byte("Incomplete URI: "), Offset: 0},
 	},
 
 	{
 		s: "sip:",
-		e: errors.New("Incomplete URI: sip:"),
+		e: sip.MsgParseError{Code: 0, Msg: []byte("Incomplete URI: sip:"), Offset: 4},
 	},
 
 	{
 		s: "sip:example.com:LOL",
-		e: errors.New("Error in URI at pos 16: sip:example.com:LOL"),
+		e: sip.MsgParseError{Code: 2, Msg: []byte("Error at pos 16: sip:example.com:LOL"), Offset: 16},
 	},
 
 	{
@@ -123,7 +122,7 @@ var uriTests = []uriTest{
 
 	{
 		s: "sip:dead:beef::666:5060",
-		e: errors.New("Error in URI at pos 9: sip:dead:beef::666:5060"),
+		e: sip.MsgParseError{Code: 2, Msg: []byte("Error at pos 9: sip:dead:beef::666:5060"), Offset: 9},
 	},
 
 	{
@@ -148,7 +147,7 @@ var uriTests = []uriTest{
 
 	{
 		s: "sips:google.com ;lol ;h=omg",
-		e: errors.New("Error in URI at pos 15: sips:google.com ;lol ;h=omg"),
+		e: sip.MsgParseError{Code: 2, Msg: []byte("Error at pos 15: sips:google.com ;lol ;h=omg"), Offset: 15},
 	},
 
 	{
@@ -211,7 +210,7 @@ var uriTests = []uriTest{
 
 func TestParseURI(t *testing.T) {
 	for _, test := range uriTests {
-		uri, err := sip.ParseURI([]byte(test.s))
+		uri, _, err := sip.ParseURI([]byte(test.s))
 		if err != nil {
 			if !reflect.DeepEqual(test.e, err) {
 				t.Errorf("%s\nWant: %#v\nGot:  %#v", test.s, test.e, err)

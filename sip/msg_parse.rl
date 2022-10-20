@@ -16,9 +16,7 @@
 package sip
 
 import (
-	"errors"
 	"fmt"
-	"github.com/jart/gosip/sdp"
 )
 
 %% machine msg;
@@ -26,9 +24,9 @@ import (
 %% write data;
 
 // ParseMsg turns a SIP message byte slice into a data structure.
-func ParseMsg(data []byte) (msg *Msg, err error) {
+func ParseMsg(data []byte) (msg *Msg, pos int, err error) {
 	if data == nil {
-		return nil, nil
+		return nil, 0, nil
 	}
 	msg = new(Msg)
 	viap := &msg.Via
@@ -54,27 +52,22 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 
 	if cs < msg_first_final {
 		if p == pe {
-			return nil, MsgIncompleteError{data}
+			return nil, p, MsgParseError{Code: IncompleteHeader, Msg: []uint8{}, Offset: 0}
 		} else {
-			return nil, MsgParseError{Msg: data, Offset: p}
+			return nil, p, MsgParseError{Code: ParseError, Msg: data, Offset: p}
 		}
 	}
 
 	if clen > 0 {
-		if clen != len(data) - p {
-			return nil, errors.New(fmt.Sprintf("Content-Length incorrect: %d != %d", clen, len(data) - p))
+		if clen > len(data) - p {
+			return nil, p, MsgParseError{
+			    Code: IncompletePayload,
+			    Msg: []byte(fmt.Sprintf("Content-Length: %d", clen)),
+			    Offset: len(data) - p}
 		}
-		if ctype == sdp.ContentType {
-			ms, err := sdp.Parse(string(data[p:len(data)]))
-			if err != nil {
-				return nil, err
-			}
-			msg.Payload = ms
-		} else {
-			msg.Payload = &MiscPayload{T: ctype, D: data[p:len(data)]}
-		}
+		msg.Payload = &MiscPayload{T: ctype, D: data[p:p+clen]}
 	}
-	return msg, nil
+	return msg, p+clen, nil
 }
 
 func lookAheadWSP(data []byte, p, pe int) bool {

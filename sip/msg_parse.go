@@ -17,16 +17,14 @@
 package sip
 
 import (
-	"errors"
 	"fmt"
-	"github.com/jart/gosip/sdp"
 )
 
-//line msg_parse.rl:25
+//line msg_parse.rl:23
 
-//line msg_parse.rl:26
+//line msg_parse.rl:24
 
-//line msg_parse.go:32
+//line msg_parse.go:30
 const msg_start int = 1
 const msg_first_final int = 765
 const msg_error int = 0
@@ -43,12 +41,12 @@ const msg_en_xheader int = 273
 const msg_en_header int = 280
 const msg_en_main int = 1
 
-//line msg_parse.rl:27
-
 // ParseMsg turns a SIP message byte slice into a data structure.
-func ParseMsg(data []byte) (msg *Msg, err error) {
+//
+//line msg_parse.rl:25
+func ParseMsg(data []byte) (msg *Msg, pos int, err error) {
 	if data == nil {
-		return nil, nil
+		return nil, 0, nil
 	}
 	msg = new(Msg)
 	viap := &msg.Via
@@ -68,16 +66,16 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	var addrp **Addr
 	var addr *Addr
 
-//line msg_parse.rl:52
+//line msg_parse.rl:50
 
-//line msg_parse.go:78
+//line msg_parse.go:76
 	{
 		cs = msg_start
 	}
 
-//line msg_parse.rl:53
+//line msg_parse.rl:51
 
-//line msg_parse.go:85
+//line msg_parse.go:83
 	{
 		var _widec int16
 		if p == pe {
@@ -1702,7 +1700,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 		}
 
 		goto st0
-//line msg_parse.go:1708
+//line msg_parse.go:1706
 	st_case_0:
 	st0:
 		cs = 0
@@ -1718,7 +1716,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof2
 		}
 	st_case_2:
-//line msg_parse.go:1724
+//line msg_parse.go:1722
 		switch data[p] {
 		case 32:
 			goto tr3
@@ -1765,7 +1763,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof3
 		}
 	st_case_3:
-//line msg_parse.go:1771
+//line msg_parse.go:1769
 		if data[p] == 32 {
 			goto st0
 		}
@@ -1781,7 +1779,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof4
 		}
 	st_case_4:
-//line msg_parse.go:1787
+//line msg_parse.go:1785
 		if data[p] == 32 {
 			goto tr7
 		}
@@ -1789,9 +1787,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr7:
 //line sip.rl:124
 
-		msg.Request, err = ParseURI(data[mark:p])
+		msg.Request, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st5
@@ -1800,7 +1798,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof5
 		}
 	st_case_5:
-//line msg_parse.go:1804
+//line msg_parse.go:1802
 		if data[p] == 83 {
 			goto st6
 		}
@@ -1852,7 +1850,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof10
 		}
 	st_case_10:
-//line msg_parse.go:1856
+//line msg_parse.go:1854
 		if data[p] == 46 {
 			goto st11
 		}
@@ -1880,7 +1878,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof12
 		}
 	st_case_12:
-//line msg_parse.go:1884
+//line msg_parse.go:1882
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -1906,7 +1904,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof13
 		}
 	st_case_13:
-//line msg_parse.go:1910
+//line msg_parse.go:1908
 		if data[p] == 10 {
 			goto tr16
 		}
@@ -1922,7 +1920,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof765
 		}
 	st_case_765:
-//line msg_parse.go:1924
+//line msg_parse.go:1922
 		goto st0
 	tr2:
 //line sip.rl:80
@@ -1935,7 +1933,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof14
 		}
 	st_case_14:
-//line msg_parse.go:1937
+//line msg_parse.go:1935
 		switch data[p] {
 		case 32:
 			goto tr3
@@ -2072,7 +2070,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof18
 		}
 	st_case_18:
-//line msg_parse.go:2074
+//line msg_parse.go:2072
 		if data[p] == 46 {
 			goto st19
 		}
@@ -2100,7 +2098,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof20
 		}
 	st_case_20:
-//line msg_parse.go:2102
+//line msg_parse.go:2100
 		if data[p] == 32 {
 			goto st21
 		}
@@ -2128,7 +2126,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof22
 		}
 	st_case_22:
-//line msg_parse.go:2130
+//line msg_parse.go:2128
 		if 48 <= data[p] && data[p] <= 57 {
 			goto tr25
 		}
@@ -2144,7 +2142,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof23
 		}
 	st_case_23:
-//line msg_parse.go:2146
+//line msg_parse.go:2144
 		if 48 <= data[p] && data[p] <= 57 {
 			goto tr26
 		}
@@ -2160,7 +2158,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof24
 		}
 	st_case_24:
-//line msg_parse.go:2162
+//line msg_parse.go:2160
 		if data[p] == 32 {
 			goto st25
 		}
@@ -2254,7 +2252,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof26
 		}
 	st_case_26:
-//line msg_parse.go:2256
+//line msg_parse.go:2254
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -2328,7 +2326,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof27
 		}
 	st_case_27:
-//line msg_parse.go:2330
+//line msg_parse.go:2328
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -2353,7 +2351,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof28
 		}
 	st_case_28:
-//line msg_parse.go:2355
+//line msg_parse.go:2353
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
@@ -2390,7 +2388,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof29
 		}
 	st_case_29:
-//line msg_parse.go:2392
+//line msg_parse.go:2390
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr35
 		}
@@ -2418,7 +2416,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof30
 		}
 	st_case_30:
-//line msg_parse.go:2420
+//line msg_parse.go:2418
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr37
 		}
@@ -2446,7 +2444,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof31
 		}
 	st_case_31:
-//line msg_parse.go:2448
+//line msg_parse.go:2446
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr38
 		}
@@ -2474,7 +2472,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof32
 		}
 	st_case_32:
-//line msg_parse.go:2476
+//line msg_parse.go:2474
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr39
 		}
@@ -2502,7 +2500,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof33
 		}
 	st_case_33:
-//line msg_parse.go:2504
+//line msg_parse.go:2502
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr40
 		}
@@ -2556,7 +2554,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof35
 		}
 	st_case_35:
-//line msg_parse.go:2558
+//line msg_parse.go:2556
 		switch data[p] {
 		case 33:
 			goto st35
@@ -2691,7 +2689,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof38
 		}
 	st_case_38:
-//line msg_parse.go:2693
+//line msg_parse.go:2691
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -2721,7 +2719,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof39
 		}
 	st_case_39:
-//line msg_parse.go:2723
+//line msg_parse.go:2721
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -2963,7 +2961,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof44
 		}
 	st_case_44:
-//line msg_parse.go:2965
+//line msg_parse.go:2963
 		if data[p] == 10 {
 			goto tr65
 		}
@@ -2979,7 +2977,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof766
 		}
 	st_case_766:
-//line msg_parse.go:2979
+//line msg_parse.go:2977
 		goto st0
 	tr52:
 //line sip.rl:231
@@ -2992,7 +2990,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof45
 		}
 	st_case_45:
-//line msg_parse.go:2992
+//line msg_parse.go:2990
 		if data[p] == 10 {
 			goto st46
 		}
@@ -3095,7 +3093,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof49
 		}
 	st_case_49:
-//line msg_parse.go:3095
+//line msg_parse.go:3093
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -3151,7 +3149,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof50
 		}
 	st_case_50:
-//line msg_parse.go:3151
+//line msg_parse.go:3149
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -3183,7 +3181,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof51
 		}
 	st_case_51:
-//line msg_parse.go:3183
+//line msg_parse.go:3181
 		switch {
 		case data[p] < 11:
 			if data[p] <= 9 {
@@ -3220,7 +3218,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof52
 		}
 	st_case_52:
-//line msg_parse.go:3220
+//line msg_parse.go:3218
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr77
 		}
@@ -3248,7 +3246,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof53
 		}
 	st_case_53:
-//line msg_parse.go:3248
+//line msg_parse.go:3246
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr80
 		}
@@ -3276,7 +3274,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof54
 		}
 	st_case_54:
-//line msg_parse.go:3276
+//line msg_parse.go:3274
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr81
 		}
@@ -3304,7 +3302,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof55
 		}
 	st_case_55:
-//line msg_parse.go:3304
+//line msg_parse.go:3302
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr82
 		}
@@ -3332,7 +3330,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof56
 		}
 	st_case_56:
-//line msg_parse.go:3332
+//line msg_parse.go:3330
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr83
 		}
@@ -3360,7 +3358,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof57
 		}
 	st_case_57:
-//line msg_parse.go:3360
+//line msg_parse.go:3358
 		if data[p] == 10 {
 			goto tr86
 		}
@@ -3377,7 +3375,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof58
 		}
 	st_case_58:
-//line msg_parse.go:3377
+//line msg_parse.go:3375
 		switch data[p] {
 		case 9:
 			goto tr77
@@ -3601,7 +3599,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof69
 		}
 	st_case_69:
-//line msg_parse.go:3601
+//line msg_parse.go:3599
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -3662,7 +3660,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof70
 		}
 	st_case_70:
-//line msg_parse.go:3662
+//line msg_parse.go:3660
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -3696,7 +3694,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof71
 		}
 	st_case_71:
-//line msg_parse.go:3696
+//line msg_parse.go:3694
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -3786,7 +3784,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof767
 		}
 	st_case_767:
-//line msg_parse.go:3782
+//line msg_parse.go:3780
 		goto st0
 	st72:
 		if p++; p == pe {
@@ -3832,7 +3830,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof75
 		}
 	st_case_75:
-//line msg_parse.go:3828
+//line msg_parse.go:3826
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -3903,7 +3901,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof79
 		}
 	st_case_79:
-//line msg_parse.go:3899
+//line msg_parse.go:3897
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -3966,7 +3964,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof80
 		}
 	st_case_80:
-//line msg_parse.go:3962
+//line msg_parse.go:3960
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -4089,7 +4087,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof85
 		}
 	st_case_85:
-//line msg_parse.go:4085
+//line msg_parse.go:4083
 		if data[p] == 10 {
 			goto tr122
 		}
@@ -4166,7 +4164,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof87
 		}
 	st_case_87:
-//line msg_parse.go:4162
+//line msg_parse.go:4160
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -4222,7 +4220,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof88
 		}
 	st_case_88:
-//line msg_parse.go:4218
+//line msg_parse.go:4216
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -4256,7 +4254,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof89
 		}
 	st_case_89:
-//line msg_parse.go:4252
+//line msg_parse.go:4250
 		switch {
 		case data[p] < 11:
 			if data[p] <= 9 {
@@ -4293,7 +4291,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof90
 		}
 	st_case_90:
-//line msg_parse.go:4289
+//line msg_parse.go:4287
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr132
 		}
@@ -4321,7 +4319,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof91
 		}
 	st_case_91:
-//line msg_parse.go:4317
+//line msg_parse.go:4315
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr135
 		}
@@ -4349,7 +4347,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof92
 		}
 	st_case_92:
-//line msg_parse.go:4345
+//line msg_parse.go:4343
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr136
 		}
@@ -4377,7 +4375,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof93
 		}
 	st_case_93:
-//line msg_parse.go:4373
+//line msg_parse.go:4371
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr137
 		}
@@ -4405,7 +4403,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof94
 		}
 	st_case_94:
-//line msg_parse.go:4401
+//line msg_parse.go:4399
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr138
 		}
@@ -4433,7 +4431,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof95
 		}
 	st_case_95:
-//line msg_parse.go:4429
+//line msg_parse.go:4427
 		if data[p] == 10 {
 			goto tr141
 		}
@@ -4450,7 +4448,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof96
 		}
 	st_case_96:
-//line msg_parse.go:4446
+//line msg_parse.go:4444
 		switch data[p] {
 		case 9:
 			goto tr132
@@ -4536,7 +4534,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof100
 		}
 	st_case_100:
-//line msg_parse.go:4532
+//line msg_parse.go:4530
 		if data[p] == 10 {
 			goto st101
 		}
@@ -4620,7 +4618,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof104
 		}
 	st_case_104:
-//line msg_parse.go:4616
+//line msg_parse.go:4614
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -4675,7 +4673,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof105
 		}
 	st_case_105:
-//line msg_parse.go:4671
+//line msg_parse.go:4669
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -4705,7 +4703,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof106
 		}
 	st_case_106:
-//line msg_parse.go:4701
+//line msg_parse.go:4699
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -4763,7 +4761,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof107
 		}
 	st_case_107:
-//line msg_parse.go:4759
+//line msg_parse.go:4757
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -4818,7 +4816,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof108
 		}
 	st_case_108:
-//line msg_parse.go:4814
+//line msg_parse.go:4812
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -4848,7 +4846,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof109
 		}
 	st_case_109:
-//line msg_parse.go:4844
+//line msg_parse.go:4842
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -4906,7 +4904,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof110
 		}
 	st_case_110:
-//line msg_parse.go:4902
+//line msg_parse.go:4900
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -4964,7 +4962,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof111
 		}
 	st_case_111:
-//line msg_parse.go:4960
+//line msg_parse.go:4958
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -5011,7 +5009,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof112
 		}
 	st_case_112:
-//line msg_parse.go:5007
+//line msg_parse.go:5005
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -5064,7 +5062,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof113
 		}
 	st_case_113:
-//line msg_parse.go:5060
+//line msg_parse.go:5058
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -5098,7 +5096,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof114
 		}
 	st_case_114:
-//line msg_parse.go:5094
+//line msg_parse.go:5092
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -5176,7 +5174,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof768
 		}
 	st_case_768:
-//line msg_parse.go:5168
+//line msg_parse.go:5166
 		goto st0
 	st115:
 		if p++; p == pe {
@@ -5222,7 +5220,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof118
 		}
 	st_case_118:
-//line msg_parse.go:5214
+//line msg_parse.go:5212
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -5253,7 +5251,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof119
 		}
 	st_case_119:
-//line msg_parse.go:5245
+//line msg_parse.go:5243
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -5315,7 +5313,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof121
 		}
 	st_case_121:
-//line msg_parse.go:5307
+//line msg_parse.go:5305
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -5423,7 +5421,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof128
 		}
 	st_case_128:
-//line msg_parse.go:5415
+//line msg_parse.go:5413
 		if data[p] == 10 {
 			goto tr199
 		}
@@ -5475,7 +5473,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof132
 		}
 	st_case_132:
-//line msg_parse.go:5467
+//line msg_parse.go:5465
 		if data[p] == 10 {
 			goto st133
 		}
@@ -5542,7 +5540,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof136
 		}
 	st_case_136:
-//line msg_parse.go:5534
+//line msg_parse.go:5532
 		switch data[p] {
 		case 46:
 			goto st136
@@ -5573,7 +5571,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof137
 		}
 	st_case_137:
-//line msg_parse.go:5565
+//line msg_parse.go:5563
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -5609,7 +5607,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof138
 		}
 	st_case_138:
-//line msg_parse.go:5601
+//line msg_parse.go:5599
 		if data[p] == 10 {
 			goto st139
 		}
@@ -5731,7 +5729,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof144
 		}
 	st_case_144:
-//line msg_parse.go:5723
+//line msg_parse.go:5721
 		if data[p] == 10 {
 			goto st145
 		}
@@ -5836,7 +5834,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof150
 		}
 	st_case_150:
-//line msg_parse.go:5828
+//line msg_parse.go:5826
 		if data[p] == 10 {
 			goto st151
 		}
@@ -5920,7 +5918,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof154
 		}
 	st_case_154:
-//line msg_parse.go:5912
+//line msg_parse.go:5910
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -5981,7 +5979,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof155
 		}
 	st_case_155:
-//line msg_parse.go:5973
+//line msg_parse.go:5971
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -6015,7 +6013,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof156
 		}
 	st_case_156:
-//line msg_parse.go:6007
+//line msg_parse.go:6005
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -6097,7 +6095,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof769
 		}
 	st_case_769:
-//line msg_parse.go:6085
+//line msg_parse.go:6083
 		goto st0
 	st157:
 		if p++; p == pe {
@@ -6143,7 +6141,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof160
 		}
 	st_case_160:
-//line msg_parse.go:6131
+//line msg_parse.go:6129
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -6214,7 +6212,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof164
 		}
 	st_case_164:
-//line msg_parse.go:6202
+//line msg_parse.go:6200
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -6277,7 +6275,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof165
 		}
 	st_case_165:
-//line msg_parse.go:6265
+//line msg_parse.go:6263
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -6400,7 +6398,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof170
 		}
 	st_case_170:
-//line msg_parse.go:6388
+//line msg_parse.go:6386
 		if data[p] == 10 {
 			goto tr246
 		}
@@ -6477,7 +6475,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof172
 		}
 	st_case_172:
-//line msg_parse.go:6465
+//line msg_parse.go:6463
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -6533,7 +6531,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof173
 		}
 	st_case_173:
-//line msg_parse.go:6521
+//line msg_parse.go:6519
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -6567,7 +6565,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof174
 		}
 	st_case_174:
-//line msg_parse.go:6555
+//line msg_parse.go:6553
 		switch {
 		case data[p] < 11:
 			if data[p] <= 9 {
@@ -6604,7 +6602,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof175
 		}
 	st_case_175:
-//line msg_parse.go:6592
+//line msg_parse.go:6590
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr256
 		}
@@ -6632,7 +6630,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof176
 		}
 	st_case_176:
-//line msg_parse.go:6620
+//line msg_parse.go:6618
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr259
 		}
@@ -6660,7 +6658,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof177
 		}
 	st_case_177:
-//line msg_parse.go:6648
+//line msg_parse.go:6646
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr260
 		}
@@ -6688,7 +6686,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof178
 		}
 	st_case_178:
-//line msg_parse.go:6676
+//line msg_parse.go:6674
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr261
 		}
@@ -6716,7 +6714,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof179
 		}
 	st_case_179:
-//line msg_parse.go:6704
+//line msg_parse.go:6702
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr262
 		}
@@ -6744,7 +6742,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof180
 		}
 	st_case_180:
-//line msg_parse.go:6732
+//line msg_parse.go:6730
 		if data[p] == 10 {
 			goto tr265
 		}
@@ -6761,7 +6759,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof181
 		}
 	st_case_181:
-//line msg_parse.go:6749
+//line msg_parse.go:6747
 		switch data[p] {
 		case 9:
 			goto tr256
@@ -6847,7 +6845,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof185
 		}
 	st_case_185:
-//line msg_parse.go:6835
+//line msg_parse.go:6833
 		if data[p] == 10 {
 			goto st186
 		}
@@ -6948,7 +6946,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof189
 		}
 	st_case_189:
-//line msg_parse.go:6936
+//line msg_parse.go:6934
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -6988,7 +6986,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof190
 		}
 	st_case_190:
-//line msg_parse.go:6976
+//line msg_parse.go:6974
 		switch {
 		case data[p] > 90:
 			if 97 <= data[p] && data[p] <= 122 {
@@ -7009,7 +7007,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof191
 		}
 	st_case_191:
-//line msg_parse.go:6997
+//line msg_parse.go:6995
 		switch data[p] {
 		case 43:
 			goto st191
@@ -7097,9 +7095,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr279:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st194
@@ -7108,7 +7106,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof194
 		}
 	st_case_194:
-//line msg_parse.go:7094
+//line msg_parse.go:7092
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -7205,7 +7203,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof770
 		}
 	st_case_770:
-//line msg_parse.go:7187
+//line msg_parse.go:7185
 		goto st0
 	st196:
 		if p++; p == pe {
@@ -7419,7 +7417,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof210
 		}
 	st_case_210:
-//line msg_parse.go:7401
+//line msg_parse.go:7399
 		if data[p] == 10 {
 			goto st211
 		}
@@ -7461,7 +7459,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof213
 		}
 	st_case_213:
-//line msg_parse.go:7443
+//line msg_parse.go:7441
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -7523,7 +7521,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof214
 		}
 	st_case_214:
-//line msg_parse.go:7505
+//line msg_parse.go:7503
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -7587,7 +7585,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof215
 		}
 	st_case_215:
-//line msg_parse.go:7569
+//line msg_parse.go:7567
 		if data[p] == 10 {
 			goto st216
 		}
@@ -7619,7 +7617,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof217
 		}
 	st_case_217:
-//line msg_parse.go:7601
+//line msg_parse.go:7599
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -7679,7 +7677,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof218
 		}
 	st_case_218:
-//line msg_parse.go:7661
+//line msg_parse.go:7659
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -7747,7 +7745,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof219
 		}
 	st_case_219:
-//line msg_parse.go:7729
+//line msg_parse.go:7727
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -7803,7 +7801,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof220
 		}
 	st_case_220:
-//line msg_parse.go:7785
+//line msg_parse.go:7783
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -7833,7 +7831,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof221
 		}
 	st_case_221:
-//line msg_parse.go:7815
+//line msg_parse.go:7813
 		switch {
 		case data[p] < 11:
 			if data[p] <= 9 {
@@ -7870,7 +7868,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof222
 		}
 	st_case_222:
-//line msg_parse.go:7852
+//line msg_parse.go:7850
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr320
 		}
@@ -7898,7 +7896,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof223
 		}
 	st_case_223:
-//line msg_parse.go:7880
+//line msg_parse.go:7878
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr323
 		}
@@ -7926,7 +7924,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof224
 		}
 	st_case_224:
-//line msg_parse.go:7908
+//line msg_parse.go:7906
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr324
 		}
@@ -7954,7 +7952,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof225
 		}
 	st_case_225:
-//line msg_parse.go:7936
+//line msg_parse.go:7934
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr325
 		}
@@ -7982,7 +7980,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof226
 		}
 	st_case_226:
-//line msg_parse.go:7964
+//line msg_parse.go:7962
 		if 128 <= data[p] && data[p] <= 191 {
 			goto tr326
 		}
@@ -8010,7 +8008,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof227
 		}
 	st_case_227:
-//line msg_parse.go:7992
+//line msg_parse.go:7990
 		if data[p] == 10 {
 			goto tr332
 		}
@@ -8027,7 +8025,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof228
 		}
 	st_case_228:
-//line msg_parse.go:8009
+//line msg_parse.go:8007
 		switch data[p] {
 		case 9:
 			goto tr320
@@ -8160,9 +8158,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr336:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st233
@@ -8171,7 +8169,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof233
 		}
 	st_case_233:
-//line msg_parse.go:8151
+//line msg_parse.go:8149
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -8254,7 +8252,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof771
 		}
 	st_case_771:
-//line msg_parse.go:8232
+//line msg_parse.go:8230
 		goto st0
 	st235:
 		if p++; p == pe {
@@ -8356,9 +8354,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr340:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st242
@@ -8367,7 +8365,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof242
 		}
 	st_case_242:
-//line msg_parse.go:8343
+//line msg_parse.go:8341
 		if data[p] == 10 {
 			goto st243
 		}
@@ -8403,9 +8401,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr337:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st245
@@ -8414,7 +8412,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof245
 		}
 	st_case_245:
-//line msg_parse.go:8388
+//line msg_parse.go:8386
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -8471,9 +8469,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr355:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st246
@@ -8482,7 +8480,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof246
 		}
 	st_case_246:
-//line msg_parse.go:8454
+//line msg_parse.go:8452
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -8534,7 +8532,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof772
 		}
 	st_case_772:
-//line msg_parse.go:8505
+//line msg_parse.go:8503
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -8564,9 +8562,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr359:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st247
@@ -8575,7 +8573,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof247
 		}
 	st_case_247:
-//line msg_parse.go:8544
+//line msg_parse.go:8542
 		if data[p] == 10 {
 			goto st248
 		}
@@ -8639,7 +8637,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof773
 		}
 	st_case_773:
-//line msg_parse.go:8606
+//line msg_parse.go:8604
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -8687,9 +8685,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr338:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st250
@@ -8698,7 +8696,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof250
 		}
 	st_case_250:
-//line msg_parse.go:8663
+//line msg_parse.go:8661
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -8755,9 +8753,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr365:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st251
@@ -8766,7 +8764,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof251
 		}
 	st_case_251:
-//line msg_parse.go:8729
+//line msg_parse.go:8727
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -8812,7 +8810,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof774
 		}
 	st_case_774:
-//line msg_parse.go:8774
+//line msg_parse.go:8772
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -8842,9 +8840,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr369:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st252
@@ -8853,7 +8851,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof252
 		}
 	st_case_252:
-//line msg_parse.go:8813
+//line msg_parse.go:8811
 		if data[p] == 10 {
 			goto st253
 		}
@@ -8889,9 +8887,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr367:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 //line sip.rl:72
@@ -8908,7 +8906,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof775
 		}
 	st_case_775:
-//line msg_parse.go:8865
+//line msg_parse.go:8863
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -8965,9 +8963,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr357:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 //line sip.rl:217
@@ -8990,7 +8988,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof776
 		}
 	st_case_776:
-//line msg_parse.go:8944
+//line msg_parse.go:8942
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -9047,9 +9045,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr358:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 //line sip.rl:217
@@ -9070,9 +9068,9 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 	tr368:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 //line sip.rl:72
@@ -9089,7 +9087,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof777
 		}
 	st_case_777:
-//line msg_parse.go:9037
+//line msg_parse.go:9035
 		if data[p] == 10 {
 			goto tr375
 		}
@@ -9105,14 +9103,14 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof778
 		}
 	st_case_778:
-//line msg_parse.go:9051
+//line msg_parse.go:9049
 		goto st0
 	tr339:
 //line sip.rl:208
 
-		addr.Uri, err = ParseURI(data[mark:p])
+		addr.Uri, _, err = ParseURI(data[mark:p])
 		if err != nil {
-			return nil, err
+			return nil, p, err
 		}
 
 		goto st255
@@ -9121,7 +9119,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof255
 		}
 	st_case_255:
-//line msg_parse.go:9065
+//line msg_parse.go:9063
 		if data[p] == 10 {
 			goto tr375
 		}
@@ -9183,7 +9181,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof257
 		}
 	st_case_257:
-//line msg_parse.go:9127
+//line msg_parse.go:9125
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -9330,7 +9328,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof779
 		}
 	st_case_779:
-//line msg_parse.go:9271
+//line msg_parse.go:9269
 		goto st0
 	st259:
 		if p++; p == pe {
@@ -9408,7 +9406,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof262
 		}
 	st_case_262:
-//line msg_parse.go:9349
+//line msg_parse.go:9347
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -9519,7 +9517,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof264
 		}
 	st_case_264:
-//line msg_parse.go:9460
+//line msg_parse.go:9458
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -9573,7 +9571,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof265
 		}
 	st_case_265:
-//line msg_parse.go:9514
+//line msg_parse.go:9512
 		if 128 <= data[p] && data[p] <= 191 {
 			goto st264
 		}
@@ -9589,7 +9587,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof266
 		}
 	st_case_266:
-//line msg_parse.go:9530
+//line msg_parse.go:9528
 		if 128 <= data[p] && data[p] <= 191 {
 			goto st265
 		}
@@ -9605,7 +9603,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof267
 		}
 	st_case_267:
-//line msg_parse.go:9546
+//line msg_parse.go:9544
 		if 128 <= data[p] && data[p] <= 191 {
 			goto st266
 		}
@@ -9621,7 +9619,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof268
 		}
 	st_case_268:
-//line msg_parse.go:9562
+//line msg_parse.go:9560
 		if 128 <= data[p] && data[p] <= 191 {
 			goto st267
 		}
@@ -9637,7 +9635,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof269
 		}
 	st_case_269:
-//line msg_parse.go:9578
+//line msg_parse.go:9576
 		if 128 <= data[p] && data[p] <= 191 {
 			goto st268
 		}
@@ -9653,7 +9651,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof270
 		}
 	st_case_270:
-//line msg_parse.go:9594
+//line msg_parse.go:9592
 		if data[p] == 10 {
 			goto tr403
 		}
@@ -9678,7 +9676,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof780
 		}
 	st_case_780:
-//line msg_parse.go:9617
+//line msg_parse.go:9615
 		goto st0
 	tr394:
 //line sip.rl:80
@@ -9691,7 +9689,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof271
 		}
 	st_case_271:
-//line msg_parse.go:9630
+//line msg_parse.go:9628
 		if data[p] == 10 {
 			goto st272
 		}
@@ -9801,7 +9799,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof275
 		}
 	st_case_275:
-//line msg_parse.go:9740
+//line msg_parse.go:9738
 		switch data[p] {
 		case 9:
 			goto st275
@@ -9822,7 +9820,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof276
 		}
 	st_case_276:
-//line msg_parse.go:9761
+//line msg_parse.go:9759
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -9866,7 +9864,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof781
 		}
 	st_case_781:
-//line msg_parse.go:9804
+//line msg_parse.go:9802
 		goto st0
 	st277:
 		if p++; p == pe {
@@ -9963,7 +9961,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof281
 		}
 	st_case_281:
-//line msg_parse.go:9902
+//line msg_parse.go:9900
 		switch data[p] {
 		case 65:
 			goto st282
@@ -10220,7 +10218,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof283
 		}
 	st_case_283:
-//line msg_parse.go:10159
+//line msg_parse.go:10157
 		switch data[p] {
 		case 9:
 			goto st283
@@ -10385,7 +10383,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof284
 		}
 	st_case_284:
-//line msg_parse.go:10324
+//line msg_parse.go:10322
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -10479,7 +10477,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof782
 		}
 	st_case_782:
-//line msg_parse.go:10408
+//line msg_parse.go:10406
 		goto st0
 	st285:
 		if p++; p == pe {
@@ -11719,7 +11717,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof378
 		}
 	st_case_378:
-//line msg_parse.go:11648
+//line msg_parse.go:11646
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -11874,7 +11872,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof381
 		}
 	st_case_381:
-//line msg_parse.go:11803
+//line msg_parse.go:11801
 		if data[p] == 10 {
 			goto tr559
 		}
@@ -12095,7 +12093,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof394
 		}
 	st_case_394:
-//line msg_parse.go:12024
+//line msg_parse.go:12022
 		switch data[p] {
 		case 9:
 			goto st394
@@ -12138,7 +12136,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof395
 		}
 	st_case_395:
-//line msg_parse.go:12067
+//line msg_parse.go:12065
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -12708,7 +12706,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof437
 		}
 	st_case_437:
-//line msg_parse.go:12637
+//line msg_parse.go:12635
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -12896,7 +12894,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof450
 		}
 	st_case_450:
-//line msg_parse.go:12825
+//line msg_parse.go:12823
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -12978,7 +12976,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof452
 		}
 	st_case_452:
-//line msg_parse.go:12907
+//line msg_parse.go:12905
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -13484,7 +13482,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof485
 		}
 	st_case_485:
-//line msg_parse.go:13413
+//line msg_parse.go:13411
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -13840,7 +13838,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof508
 		}
 	st_case_508:
-//line msg_parse.go:13769
+//line msg_parse.go:13767
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -14101,7 +14099,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof526
 		}
 	st_case_526:
-//line msg_parse.go:14030
+//line msg_parse.go:14028
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -14451,7 +14449,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 			goto _test_eof552
 		}
 	st_case_552:
-//line msg_parse.go:14380
+//line msg_parse.go:14378
 		_widec = int16(data[p])
 		if 13 <= data[p] && data[p] <= 13 {
 			_widec = 256 + (int16(data[p]) - 0)
@@ -19490,7 +19488,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 
 				p--
 
-				if p != '\n' {
+				if data[p] != '\n' {
 					p--
 
 				}
@@ -19505,7 +19503,7 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 				addrp = &addr.Next
 				addr = nil
 
-//line msg_parse.go:17868
+//line msg_parse.go:17866
 			}
 		}
 
@@ -19514,31 +19512,26 @@ func ParseMsg(data []byte) (msg *Msg, err error) {
 		}
 	}
 
-//line msg_parse.rl:54
+//line msg_parse.rl:52
 
 	if cs < msg_first_final {
 		if p == pe {
-			return nil, MsgIncompleteError{data}
+			return nil, p, MsgParseError{Code: IncompleteHeader, Msg: []uint8{}, Offset: 0}
 		} else {
-			return nil, MsgParseError{Msg: data, Offset: p}
+			return nil, p, MsgParseError{Code: ParseError, Msg: data, Offset: p}
 		}
 	}
 
 	if clen > 0 {
-		if clen != len(data)-p {
-			return nil, errors.New(fmt.Sprintf("Content-Length incorrect: %d != %d", clen, len(data)-p))
+		if clen > len(data)-p {
+			return nil, p, MsgParseError{
+				Code:   IncompletePayload,
+				Msg:    []byte(fmt.Sprintf("Content-Length: %d", clen)),
+				Offset: len(data) - p}
 		}
-		if ctype == sdp.ContentType {
-			ms, err := sdp.Parse(string(data[p:len(data)]))
-			if err != nil {
-				return nil, err
-			}
-			msg.Payload = ms
-		} else {
-			msg.Payload = &MiscPayload{T: ctype, D: data[p:len(data)]}
-		}
+		msg.Payload = &MiscPayload{T: ctype, D: data[p : p+clen]}
 	}
-	return msg, nil
+	return msg, p + clen, nil
 }
 
 func lookAheadWSP(data []byte, p, pe int) bool {
