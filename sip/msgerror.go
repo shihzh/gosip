@@ -55,7 +55,7 @@ func (err MsgParseError) Error() string {
 		line := 0
 		lineOffset := 0
 		for i := 0; i < len(lines); i++ {
-			if o <= err.Offset && err.Offset < o+len(lines[i]) {
+			if o <= err.Offset && err.Offset <= o+len(lines[i]) {
 				b.Write(lines[i])
 				line = i + 1
 				lineOffset = err.Offset - o
