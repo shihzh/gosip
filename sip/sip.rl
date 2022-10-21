@@ -553,8 +553,8 @@ RequestURI      = ^SP+ >mark %RequestURI;
 StatusCode      = ( digit @StatusCode ) {3};
 ReasonPhrase    = reasonmc+ >start %ReasonPhrase;
 SIPVersion      = "SIP/" SIPVersionNo;
-Request         = Method SP RequestURI SP SIPVersion CRLF @goto_header;
-Response        = SIPVersion SP StatusCode SP ReasonPhrase CRLF @goto_header;
+Request         = CRLF* Method SP RequestURI SP SIPVersion CRLF @goto_header;
+Response        = CRLF* SIPVersion SP StatusCode SP ReasonPhrase CRLF @goto_header;
 Message         = Request | Response;
 
 }%%
