@@ -17,7 +17,6 @@
 package sip
 
 import (
-	"bytes"
 	"strings"
 )
 
@@ -40,7 +39,7 @@ func (p *Param) Get(name string) *Param {
 }
 
 // Append serializes parameters in insertion order.
-func (p *Param) Append(b *bytes.Buffer) {
+func (p *Param) Append(b Writer) {
 	if p == nil {
 		return
 	}

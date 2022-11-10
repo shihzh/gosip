@@ -17,10 +17,8 @@
 package sip
 
 import (
-	"bytes"
-	"strconv"
-
 	"github.com/jart/gosip/util"
+	"strconv"
 )
 
 // Example: SIP/2.0/UDP 1.2.3.4:5060;branch=z9hG4bK556f77e6.
@@ -34,7 +32,7 @@ type Via struct {
 	Next      *Via   // pointer to next via header if any
 }
 
-func (via *Via) Append(b *bytes.Buffer) {
+func (via *Via) Append(b Writer) {
 	if via.Protocol == "" {
 		b.WriteString("SIP/")
 	} else {

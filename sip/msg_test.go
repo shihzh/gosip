@@ -1351,3 +1351,44 @@ func TestParseMsgFile(t *testing.T) { // 195200 op/  2334 ms
 	end := time.Now().UnixMilli()
 	fmt.Printf("parse %d message, total time %d ms\n", count, end-start)
 }
+
+func TestAaa(t *testing.T) { // 31397 ns/op
+	t1 := "\r\n\r\nREGISTER sip:43070000002000000002@192.168.27.56:5666;transport=tcp SIP/2.0\r\n" +
+		"Call-ID: c2d21be17bb3fea723c142986a620008@192.168.27.98\r\n" +
+		"CSeq: 103 REGISTER\r\n" +
+		"From: <sip:34010000002000000101@192.168.27.56:20007>;tag=1616405761965\r\n" +
+		"To: <sip:34010000002000000101@192.168.27.95:15566>\r\n" +
+		"Via: SIP/2.0/TCP 192.168.26.132:5070;branch=z9hG4bK1616405761965-c2d21be17bb3fea723c142986a620008-192.168.26.132-60903-register383939-192.168.26.132-15566;rport\r\n" +
+		"Max-Forwards: 70\r\n" +
+		"User-Agent: sip\r\n" +
+		"Contact: <sip:43070000002000000001@192.168.27.56:20007>\r\n" +
+		"OutputPort: 20007\r\n" +
+		"Expires: 3600\r\n" +
+		"Content-Length: 0\r\n\r\n"
+	buf := []byte(t1)
+
+	for {
+		msg, pos, err := sip.ParseMsg(buf)
+		if err != nil {
+			e := err.(sip.MsgParseError)
+			if e.Code != sip.ParseError {
+				break
+			}
+			fmt.Printf("%s", err.Error())
+
+			index := bytes.Index(buf, []byte("\r\n"))
+			if index >= 0 {
+				buf = buf[index+2:]
+			} else {
+				break
+			}
+			break
+		}
+
+		var b bytes.Buffer
+		msg.Append(&b)
+		fmt.Printf("\n" + msg.String())
+
+		buf = buf[pos:]
+	}
+}

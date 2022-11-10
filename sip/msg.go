@@ -95,6 +95,12 @@ type Msg struct {
 	XHeader *XHeader
 }
 
+type Writer interface {
+	WriteString(s string) (n int, err error)
+	WriteByte(c byte) error
+	Write(p []byte) (n int, err error)
+}
+
 //go:generate ragel -Z -G2 -o msg_parse.go msg_parse.rl
 
 func (msg *Msg) IsResponse() bool {
@@ -127,7 +133,7 @@ func (msg *Msg) Copy() *Msg {
 }
 
 // I turn a SIP message back into a packet.
-func (msg *Msg) Append(b *bytes.Buffer) {
+func (msg *Msg) Append(b Writer) {
 	if msg == nil {
 		return
 	}
@@ -462,7 +468,7 @@ func (msg *Msg) Append(b *bytes.Buffer) {
 	}
 }
 
-func (msg *Msg) appendVersion(b *bytes.Buffer) {
+func (msg *Msg) appendVersion(b Writer) {
 	b.WriteString("SIP/")
 	if msg.VersionMajor == 0 {
 		b.WriteString("2.0")

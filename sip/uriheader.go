@@ -17,7 +17,6 @@
 package sip
 
 import (
-	"bytes"
 	"strings"
 )
 
@@ -40,7 +39,7 @@ func (p *URIHeader) Get(name string) *URIHeader {
 }
 
 // Append serializes URI headers in insertion order.
-func (p *URIHeader) Append(b *bytes.Buffer) {
+func (p *URIHeader) Append(b Writer) {
 	if p == nil {
 		return
 	}

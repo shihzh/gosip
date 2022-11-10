@@ -67,7 +67,7 @@ func (addr *Addr) Tag() *Addr {
 }
 
 // Reassembles a SIP address into a buffer.
-func (addr *Addr) Append(b *bytes.Buffer) {
+func (addr *Addr) Append(b Writer) {
 	if addr == nil {
 		return
 	}

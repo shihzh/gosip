@@ -17,7 +17,6 @@
 package sip
 
 import (
-	"bytes"
 	"strings"
 )
 
@@ -40,7 +39,7 @@ func (p *URIParam) Get(name string) *URIParam {
 }
 
 // Append serializes URI parameters in insertion order.
-func (p *URIParam) Append(b *bytes.Buffer) {
+func (p *URIParam) Append(b Writer) {
 	if p == nil {
 		return
 	}

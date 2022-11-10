@@ -14,12 +14,8 @@
 
 package sip
 
-import (
-	"bytes"
-)
-
 // appendSanitized appends stripping all characters that don't match the predicate.
-func appendSanitized(b *bytes.Buffer, s []byte, p func(byte) bool) {
+func appendSanitized(b Writer, s []byte, p func(byte) bool) {
 	for i := 0; i < len(s); i++ {
 		if p(s[i]) {
 			b.WriteByte(s[i])
@@ -31,7 +27,7 @@ func appendSanitized(b *bytes.Buffer, s []byte, p func(byte) bool) {
 //
 // Quotation marks are only added if necessary. This implementation will
 // truncate on input error.
-func appendQuoted(b *bytes.Buffer, s []byte) {
+func appendQuoted(b Writer, s []byte) {
 	for i := 0; i < len(s); i++ {
 		if !tokenc(s[i]) && s[i] != ' ' {
 			appendQuoteQuoted(b, s)
@@ -44,7 +40,7 @@ func appendQuoted(b *bytes.Buffer, s []byte) {
 // quoteQuoted formats an address parameter value or display name with quotes.
 //
 // This implementation will truncate on input error.
-func appendQuoteQuoted(b *bytes.Buffer, s []byte) {
+func appendQuoteQuoted(b Writer, s []byte) {
 	b.WriteByte('"')
 	for i := 0; i < len(s); i++ {
 		if qdtextc(s[i]) {

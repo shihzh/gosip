@@ -47,7 +47,7 @@ func (h *XHeader) String() string {
 }
 
 // Append serializes headers in insertion order.
-func (h *XHeader) Append(b *bytes.Buffer) {
+func (h *XHeader) Append(b Writer) {
 	if h == nil {
 		return
 	}

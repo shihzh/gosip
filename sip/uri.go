@@ -76,7 +76,7 @@ func (uri *URI) String() string {
 	return b.String()
 }
 
-func (uri *URI) Append(b *bytes.Buffer) {
+func (uri *URI) Append(b Writer) {
 	if uri == nil {
 		return
 	}
