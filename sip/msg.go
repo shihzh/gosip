@@ -478,3 +478,30 @@ func (msg *Msg) appendVersion(b Writer) {
 		b.WriteString(strconv.FormatUint(uint64(msg.VersionMinor), 10))
 	}
 }
+
+func (msg *Msg) RemoveXHeader(h *XHeader) {
+	if msg.XHeader == h {
+		msg.XHeader = h.Next
+		return
+	}
+	for header := msg.XHeader; header != nil; {
+		if header.Next == h {
+			header.Next = h.Next
+			return
+		}
+	}
+}
+
+func (msg *Msg) AddXHeader(name, value string) {
+	h := &XHeader{Name: name, Value: []byte(value)}
+	if msg.XHeader == nil {
+		msg.XHeader = h
+		return
+	}
+	for header := msg.XHeader; ; {
+		if header.Next == nil {
+			header.Next = h
+			return
+		}
+	}
+}
