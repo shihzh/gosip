@@ -484,7 +484,7 @@ func (msg *Msg) RemoveXHeader(h *XHeader) {
 		msg.XHeader = h.Next
 		return
 	}
-	for header := msg.XHeader; header != nil; {
+	for header := msg.XHeader; header.Next != nil; header = header.Next {
 		if header.Next == h {
 			header.Next = h.Next
 			return
@@ -498,7 +498,7 @@ func (msg *Msg) AddXHeader(name, value string) {
 		msg.XHeader = h
 		return
 	}
-	for header := msg.XHeader; ; {
+	for header := msg.XHeader; ; header = header.Next {
 		if header.Next == nil {
 			header.Next = h
 			return
