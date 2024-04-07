@@ -28,7 +28,7 @@ func ParseMsg(data []byte) (msg *Msg, pos int, err error) {
 	if data == nil {
 		return nil, 0, nil
 	}
-	msg = new(Msg)
+	msg = NewMsg()
 	viap := &msg.Via
 	cs := 0
 	p := 0

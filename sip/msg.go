@@ -102,6 +102,13 @@ type Writer interface {
 }
 
 //go:generate ragel -Z -G2 -o msg_parse.go msg_parse.rl
+func NewMsg()(*Msg)  {
+	return &Msg {
+		MaxForwards: -1,
+		Expires : -1,
+		MinExpires: -1,
+	}
+}
 
 func (msg *Msg) IsResponse() bool {
 	return msg.Status > 0
@@ -216,7 +223,7 @@ func (msg *Msg) Append(b Writer) {
 	if !msg.IsResponse() {
 		if msg.MaxForwards == 0 {
 			b.WriteString("Max-Forwards: 70\r\n")
-		} else {
+		} else if (msg.MaxForwards > 0) {
 			b.WriteString("Max-Forwards: ")
 			b.WriteString(strconv.Itoa(msg.MaxForwards))
 			b.WriteString("\r\n")
@@ -314,7 +321,7 @@ func (msg *Msg) Append(b Writer) {
 	}
 
 	// Expires is allowed to be 0 for for REGISTER stuff.
-	if msg.Expires > 0 || msg.Method == "REGISTER" || msg.CSeqMethod == "REGISTER" {
+	if msg.Expires >= 0 /*|| msg.Method == "REGISTER" || msg.CSeqMethod == "REGISTER"*/ {
 		b.WriteString("Expires: ")
 		b.WriteString(strconv.Itoa(msg.Expires))
 		b.WriteString("\r\n")
@@ -332,7 +339,7 @@ func (msg *Msg) Append(b Writer) {
 		b.WriteString("\r\n")
 	}
 
-	if msg.MinExpires > 0 {
+	if msg.MinExpires >= 0 {
 		b.WriteString("Min-Expires: ")
 		b.WriteString(strconv.Itoa(msg.MinExpires))
 		b.WriteString("\r\n")
